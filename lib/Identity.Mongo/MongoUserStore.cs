@@ -4,13 +4,13 @@ using MongoDB.Driver;
 
 namespace Identity.Mongo;
 
-public class MongoUserStore<TUser, TRole, TKey>(MongoDbContext ctx, IRoleStore<TRole> roleStore) : IUserRoleStore<TUser>
+public class MongoUserStore<TUser, TRole, TKey>(IMongoDatabase db, IRoleStore<TRole> roleStore) : IUserRoleStore<TUser>
     where TUser : IdentityUser<TKey>
     where TKey : IEquatable<TKey>
     where TRole : IdentityRole
 {
-    private readonly IMongoCollection<TUser> _users =  ctx.Database.GetCollection<TUser>("i_users");
-    private readonly IMongoCollection<UserRole<TKey>> _userRoles = ctx.Database.GetCollection<UserRole<TKey>>("i_user_roles");
+    private readonly IMongoCollection<TUser> _users =  db.GetCollection<TUser>("i_users");
+    private readonly IMongoCollection<UserRole<TKey>> _userRoles = db.GetCollection<UserRole<TKey>>("i_user_roles");
     
     public void Dispose() { }
 

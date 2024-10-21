@@ -12,15 +12,18 @@ public static class DbBuilder
         where TDb : MongoDbContext
     {
         services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
-
-        services.AddScoped<MongoDbContext>(sp =>
+        services.AddSingleton<IMongoDatabase>(sp =>
         {
             var mongoClient = sp.GetRequiredService<IMongoClient>();
-            var context = Activator.CreateInstance(typeof(TDb)) as TDb
-                          ?? throw new InvalidOperationException($"Could not create instance of {typeof(TDb).Name}");
+            return mongoClient.GetDatabase(databaseName);
+        });
+        
+        services.AddScoped<TDb>(sp =>
+        {
+            var db = sp.GetRequiredService<IMongoDatabase>();
+            var context = ActivatorUtilities.CreateInstance<TDb>(sp);
 
-            context.Initialize(mongoClient, databaseName);
-
+            context.Initialize(db);
             return context;
         });
     }
