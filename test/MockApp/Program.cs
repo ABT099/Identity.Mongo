@@ -38,6 +38,18 @@ app.MapGet("/add-role", async (string name, RoleManager<IdentityRole> rMgr) =>
     return Results.Ok(result);
 });
 
+app.MapGet("/context", async (string name, AppDbContext ctx) =>
+{
+    var result = new TestModel
+    {
+        Name = name
+    };
+
+    await ctx.Collection.InsertOneAsync(result);
+    
+    return Results.Ok(result);
+});
+
 
 app.Run();
 

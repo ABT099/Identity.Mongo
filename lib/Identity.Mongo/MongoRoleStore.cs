@@ -3,10 +3,10 @@ using MongoDB.Driver;
 
 namespace Identity.Mongo;
 
-public class MongoRoleStore<TRole>(MongoDbContext ctx): IRoleStore<TRole> 
+public class MongoRoleStore<TRole>(IMongoDatabase db): IRoleStore<TRole> 
     where TRole : IdentityRole
 {
-    private readonly IMongoCollection<TRole> _roles =  ctx.Database.GetCollection<TRole>("i_roles");
+    private readonly IMongoCollection<TRole> _roles =  db.GetCollection<TRole>("i_roles");
 
     public void Dispose() { }
 

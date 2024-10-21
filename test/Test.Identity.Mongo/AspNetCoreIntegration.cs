@@ -25,4 +25,12 @@ public class AspNetCoreIntegration(IntegrationFixture integrationFixture) : Inte
         var getResult = await Client.GetAsync("/role?name=test_role");
         Assert.Equal(HttpStatusCode.OK, getResult.StatusCode);
     }
+
+    [Fact]
+    public async Task create_test_for_dbContext()
+    {
+        var createResult = await Client.GetAsync("/context?name=test");
+        
+        Assert.Equal(HttpStatusCode.OK, createResult.StatusCode);
+    }
 }
